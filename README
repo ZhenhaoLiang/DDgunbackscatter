@@ -1,2 +1,2 @@
 It's an example to simualte neutron from dd gun and scatter in EJ276. A specific angle 135 is used th select lower energy neutron.
-In this program, you can just run ./toyMC for the visiaul window, or you can run ./toyMC outfile_name randmeseed, like run_scrip.sh.
+In this program, you can just run ./toyMC for the visiaul window, or you can run ./toyMC outfile_name logfile_name, like run_scrip.sh.
