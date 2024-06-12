@@ -1,0 +1,31 @@
+/run/initialize
+
+/control/verbose 2
+/run/verbose 2
+/tracking/verbose 0
+#点源输入
+/gps/particle neutron
+
+/gps/pos/type Point
+/gps/pos/centre 0 52.5 40 cm
+
+#粒子方向
+/gps/ang/type iso 
+#/gps/direction 0 0 1
+
+#能谱输入
+/gps/ene/type Arb
+/gps/hist/type arb
+#能量/数量输入
+#              	 E(MeV) Rel.yield
+/gps/hist/point    2.9 0.000000
+/gps/hist/point    2.8 0.239834
+/gps/hist/point    2.7 0.256848
+/gps/hist/point    2.6 0.257880
+/gps/hist/point    2.5 0.245438
+/gps/hist/point    2.4 0.000000
+
+/gps/hist/inter Spline
+#/gps/hist/inter Lin
+
+/run/beamOn 10000
