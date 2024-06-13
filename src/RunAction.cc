@@ -58,13 +58,14 @@ RunAction::RunAction()
   analysisManager->CreateNtupleDColumn("prex");
   analysisManager->CreateNtupleDColumn("prey");
   analysisManager->CreateNtupleDColumn("prez");
-  analysisManager->CreateNtupleDColumn("postx");
-  analysisManager->CreateNtupleDColumn("posty");
+  analysisManager->CreateNtupleDColumn("postx");   
+  analysisManager->CreateNtupleDColumn("posty");    //5
   analysisManager->CreateNtupleDColumn("postz");
-  analysisManager->CreateNtupleSColumn("type");
+  analysisManager->CreateNtupleSColumn("ptype");
   analysisManager->CreateNtupleDColumn("eventID");
   analysisManager->CreateNtupleDColumn("trackID");
-  analysisManager->CreateNtupleDColumn("parentID");
+  analysisManager->CreateNtupleDColumn("parentID");  //10
+  analysisManager->CreateNtupleDColumn("dE"); 
   analysisManager->FinishNtuple();
 }
 

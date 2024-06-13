@@ -234,7 +234,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         Water,          //its material
                         "DetectorTub");           //its name
   new G4PVPlacement(0,            
-                    G4ThreeVector(0,0,BeamPipeTubHalfLength + 5*cm),        //at end of BeamPipe
+                    G4ThreeVector(0,0,5*cm),        //at center of BeamPipe
                     logicDetectorTub,             //its logical volume
                     "DetectorTub",                //its name
                     logicSteelBeamPipeTub,      //its mother  volume
@@ -275,7 +275,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         "Scintillator");           //its name
                
   new G4PVPlacement(0,                       //no rotation
-                    pos1,                    //at position
+                    G4ThreeVector(0,0,-5*cm),       //at position
                     logicScintillator,             //its logical volume
                     "Scintillator",                //its name
                     logicAirTee,                //its mother volume  is contanier
