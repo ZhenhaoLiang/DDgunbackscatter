@@ -233,14 +233,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4LogicalVolume(DetectorTub,         //its solid
                         Water,          //its material
                         "DetectorTub");           //its name
-  new G4PVPlacement(0,            
-                    G4ThreeVector(0,0,5*cm),        //at center of BeamPipe
-                    logicDetectorTub,             //its logical volume
-                    "DetectorTub",                //its name
-                    logicSteelBeamPipeTub,      //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);
   //========================================================================
   //Whole air space=========================================================
   auto AirTee =
@@ -263,6 +255,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     checkOverlaps);          //overlaps checking
   G4VisAttributes* DetectorVisAtt= new G4VisAttributes(G4Colour(1.0,1.0,.0,0.3));  //set translucent
   logicAirTee->SetVisAttributes(DetectorVisAtt);
+
+  new G4PVPlacement(0,            
+                    G4ThreeVector(0,0,BeamPipeTubHalfLength),        //at center of BeamPipe
+                    logicDetectorTub,             //its logical volume
+                    "DetectorTub",                //its name
+                    logicAirTee,      //its mother  volume
+                    false,                   //no boolean operation
+                    0,                       //copy number
+                    checkOverlaps);
   //========================================================================
   //scintillator===============================================================     
   G4Box* Scintillator =    
