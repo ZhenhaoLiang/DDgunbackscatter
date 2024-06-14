@@ -21,7 +21,7 @@ def tracks_from_file(tr_file, tr_ttree='event',
         temp = []
         for column in step_vals:
             temp.append(events[i][column])
-            run_data.append(temp)
+        run_data.append(temp)
     dt = pd.DataFrame(run_data, columns=step_vals, dtype=object)
     dt = dt.dropna(axis=0) #删除含有缺失值的行
 
