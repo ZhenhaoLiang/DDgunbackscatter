@@ -44,6 +44,11 @@ void DetectorConstruction::DefineMaterial()
   Water = nist->FindOrBuildMaterial("G4_WATER");
   //material ============================================
   //G4Element *Al = new G4Element("Aluminium", "Al", 13., 26.982 * g / mole);
+  G4Element *H = new G4Element("Hydrogen", "H", 1., 1.0079 * g / mole);
+  G4Element *C = new G4Element("Carbon", "C", 6., 12.011 * g / mole);
+  G4Element *D = new G4Element("Deuterium", "D", 1);
+  G4Isotope *D_Iso = new G4Isotope("D_Iso", 1, 2, 2.014102 * g / mole);
+  D->AddIsotope(D_Iso, 1);
   G4Element *Si = new G4Element("Silicon", "Si", 14., 28.086 * g / mole);
   G4Element *Cr = new G4Element("Chromium", "Cr", 24., 51.996 * g / mole);
   G4Element *Mn = new G4Element("Manganese", "Mn", 25., 54.938 * g / mole);
@@ -71,6 +76,27 @@ void DetectorConstruction::DefineMaterial()
 
   G4cout << "EJ276 : density " <<  EJ276->GetDensity()/(g / cm3) << " , "
          << "NbOfAtomsPerVolume " << EJ276->GetTotNbOfAtomsPerVolume()/(1. / cm3) << G4endl;
+  
+  //==== EJ-315 for Scintillator target in BeamPipe ====
+  // https://eljentechnology.com/products/liquid-scintillators/ej-315
+
+  G4Material *C6H6 = new G4Material("C6H6", 0.877 * g / cm3, 2, kStateLiquid);
+  C6H6->AddElement(C, 6);
+  C6H6->AddElement(H, 6);
+
+  G4Material *C6D6 = new G4Material("C6D6", 0.950 * g / cm3, 2, kStateLiquid);
+  C6D6->AddElement(C, 6);
+  C6D6->AddElement(D, 6);
+
+  EJ315 =
+    new G4Material("EJ315", 0.863 * g / cm3, 2, kStateLiquid);
+  G4double fraction_d = 141.0/142.0;
+  G4double fraction_h = 1.0/142.0;
+  EJ315->AddMaterial(C6D6, fraction_d);
+  EJ315->AddMaterial(C6H6, fraction_h);
+
+  G4cout << "EJ315 : density " <<  EJ315->GetDensity()/(g / cm3) << " , "
+         << "NbOfAtomsPerVolume " << EJ315->GetTotNbOfAtomsPerVolume()/(1. / cm3) << G4endl;
   //==== Stainless Steel ====
   SS304LSteel =
     new G4Material("SS304LSteel", 8.00 * g / cm3, 5, kStateSolid);
@@ -136,7 +162,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Container=====================================================================
   G4ThreeVector pos1 = G4ThreeVector(0, 0, 0);
   G4double ContainerSize = 50*cm;
-  G4double ScintillatorSize = 20*cm;
+  G4double ScintillatorSize = 7.62*cm;
 
   G4Box* Container =    
     new G4Box("Container",                       //its name
@@ -266,13 +292,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     checkOverlaps);
   //========================================================================
   //scintillator===============================================================     
-  G4Box* Scintillator =    
-    new G4Box("Scintillator",                       //its name
-       0.5*ScintillatorSize, 0.5*ScintillatorSize, 0.5*ScintillatorSize);     //its size
+  G4Tubs* Scintillator =    
+    new G4Tubs("Scintillator",                       //its name
+       0 * cm, 0.5*ScintillatorSize, 0.5*ScintillatorSize,0. * deg, 360. * deg);     //its size
                       
   G4LogicalVolume* logicScintillator =                         
     new G4LogicalVolume(Scintillator,         //its solid
-                        Air,          //its material
+                        EJ315,          //its material
                         "Scintillator");           //its name
                
   new G4PVPlacement(0,                       //no rotation
