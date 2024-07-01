@@ -105,6 +105,16 @@ void DetectorConstruction::DefineMaterial()
   SS304LSteel->AddElement(Ni, 0.12);
   SS304LSteel->AddElement(Mn, 0.02);
   SS304LSteel->AddElement(Si, 0.01);
+  //====  Heavy Water ===
+  HeavyWater = new G4Material("HeavyWater", 1.11*g/cm3, 2,
+                                   kStateLiquid, 293.15*kelvin, 1*atmosphere);
+  HeavyWater->AddElement(D, 2);
+  HeavyWater->AddElement(O, 1);
+  //===== C6D8 =====
+  C6D8 = new G4Material("Hexane", 0.767*g/cm3, 2,
+                                   kStateLiquid, 298.15*kelvin, 1*atmosphere);
+  C6D8->AddElement(D, 2);
+  C6D8->AddElement(O, 1);
   //==========================================================================================
 }
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -298,7 +308,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                       
   G4LogicalVolume* logicScintillator =                         
     new G4LogicalVolume(Scintillator,         //its solid
-                        EJ315,          //its material
+                        HeavyWater,          //its material
                         "Scintillator");           //its name
                
   new G4PVPlacement(0,                       //no rotation

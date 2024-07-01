@@ -51,7 +51,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
   protected:
     G4LogicalVolume*  fScoringVolume;
-    G4Material *Air,*Water,*EJ276,*EJ315,*SS304LSteel;
+    G4Material *Air,*Water,*EJ276,*EJ315,*SS304LSteel,*C6D8,*HeavyWater;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -28,4 +28,4 @@
 /gps/hist/inter Spline
 #/gps/hist/inter Lin
 
-/run/beamOn 10000000
+/run/beamOn 10
