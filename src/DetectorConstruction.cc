@@ -46,6 +46,7 @@ void DetectorConstruction::DefineMaterial()
   //G4Element *Al = new G4Element("Aluminium", "Al", 13., 26.982 * g / mole);
   G4Element *H = new G4Element("Hydrogen", "H", 1., 1.0079 * g / mole);
   G4Element *C = new G4Element("Carbon", "C", 6., 12.011 * g / mole);
+  G4Element *O = new G4Element("Oxygen", "O", 8., 15.999 * g / mole);
   G4Element *D = new G4Element("Deuterium", "D", 1);
   G4Isotope *D_Iso = new G4Isotope("D_Iso", 1, 2, 2.014102 * g / mole);
   D->AddIsotope(D_Iso, 1);
