@@ -159,7 +159,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
       
   G4LogicalVolume* logicEnv =                         
     new G4LogicalVolume(solidEnv,            //its solid
-                        Water,             //its material
+                        Air,             //its material
                         "Envelope");         //its name
                
   new G4PVPlacement(0,                       //no rotation
@@ -170,153 +170,98 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);          //overlaps checking  
-  // Container=====================================================================
-  G4ThreeVector pos1 = G4ThreeVector(0, 0, 0);
-  G4double ContainerSize = 50*cm;
-  G4double ScintillatorSize = 7.62*cm;
+  // Water tank=====================================================================
+  //
+  G4ThreeVector pos1 = G4ThreeVector(0, 0, -35*cm);
+  G4double WaterTankLength = 400*cm;
 
   G4Box* Container =    
-    new G4Box("Container",                       //its name
-       0.5*ContainerSize, 0.5*ContainerSize, 0.5*ContainerSize);     //its size
-                      
-  /*G4LogicalVolume* logicContainer =                         
+    new G4Box("WaterContainer",                       //its name
+       0.5*env_sizeXY - 1*cm, 0.5*env_sizeXY - 1*cm, 0.5*WaterTankLength);     //its size
+  G4LogicalVolume* logicWaterTank =                         
     new G4LogicalVolume(Container,         //its solid
-                        Air,          //its material
-                        "Container");           //its name
-         
-  new G4PVPlacement(0,                       //no rotation
-                    pos1,                    //at position
-                    logicContainer,             //its logical volume
-                    "Container",                //its name
-                    logicEnv,                //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);          //overlaps checking*/  
-  //GuidePipe===============================================================
-  G4double GuidePipeTubHalfLength = 0.5*m;
-  G4double GuidePipeTubOutRaius = 5*cm;
-  G4double GuidePipeTubInnerRaius = 4.5*cm;
-  G4ThreeVector pos2 = G4ThreeVector(0,GuidePipeTubHalfLength*sin(pi/4) + 0.25*ContainerSize,GuidePipeTubHalfLength*sin(pi/4));
-  G4Tubs *GuidePipeTub =
-    new G4Tubs("GuidePipeTub", 0. * cm, GuidePipeTubOutRaius,
-               GuidePipeTubHalfLength, 0. * deg, 360. * deg);
-  G4Tubs *AirGuidePipeTub =
-    new G4Tubs("AirGuidePipeTub", 0. * cm, GuidePipeTubInnerRaius,
-               GuidePipeTubHalfLength, 0. * deg, 360. * deg);
-  G4VSolid *SteelGuidePipeTub =
-    new G4SubtractionSolid("SteelBPipePlate", GuidePipeTub, AirGuidePipeTub,
-                           0, G4ThreeVector());
-  G4LogicalVolume* logicSteelGuidePipeTub =                         
-    new G4LogicalVolume(SteelGuidePipeTub,         //its solid
-                        SS304LSteel,          //its material
-                        "SteelGuidePipeTub");           //its name
-  G4RotationMatrix *GuidePipeRot = new G4RotationMatrix;
-  GuidePipeRot->rotateX(45.*deg);
-  new G4PVPlacement(GuidePipeRot,            //rotate 45 degree on X
-                    pos2,                    //at position
-                    logicSteelGuidePipeTub,             //its logical volume
-                    "SteelGuidePipeTub",                //its name
+                        Water,          //its material
+                        "logicWaterTank"); 
+  new G4PVPlacement(0,            //rotate 45 degree on X
+                    G4ThreeVector(0,0,-45*cm),                    //at position
+                    logicWaterTank,             //its logical volume
+                    "WaterTank",                //its name
                     logicEnv,                //its mother  volume
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);
-  /*G4LogicalVolume* logicAirGuidePipeTub =                         
-    new G4LogicalVolume(AirGuidePipeTub,         //its solid
+
+  //LongPipe===============================================================
+  G4double LongPipeTubHalfLength = 0.5*4.27*m;
+  G4double LongPipeTubOutRaius = 2.6*cm;
+  G4double LongPipeTubInnerRaius = 2.5*cm;
+  G4ThreeVector pos2 = G4ThreeVector(0,0,-8.5*cm);
+  G4Tubs *LongPipeTub =
+    new G4Tubs("LongPipeTub", 0. * cm, LongPipeTubOutRaius,
+               LongPipeTubHalfLength, 0. * deg, 360. * deg);
+  G4Tubs *AirLongPipeTub =
+    new G4Tubs("AirLongPipeTub", 0. * cm, LongPipeTubInnerRaius,
+               LongPipeTubHalfLength, 0. * deg, 360. * deg);
+  G4VSolid *SteelLongPipeTub =
+    new G4SubtractionSolid("SteelBPipePlate", LongPipeTub, AirLongPipeTub,
+                           0, G4ThreeVector());
+  G4LogicalVolume* logicSteelLongPipeTub =                         
+    new G4LogicalVolume(SteelLongPipeTub,         //its solid
+                        SS304LSteel,          //its material
+                        "SteelLongPipeTub");           //its name
+  G4RotationMatrix *LongPipeRot = new G4RotationMatrix;
+  //GuidePipeRot->rotateX(45.*deg);
+  new G4PVPlacement(0,            //rotate 0
+                    pos2,                    //at position
+                    logicSteelLongPipeTub,             //its logical volume
+                    "SteelLongPipeTub",                //its name
+                    logicEnv,                //its mother  volume
+                    false,                   //no boolean operation
+                    0,                       //copy number
+                    checkOverlaps);
+  G4LogicalVolume* logicAirLongPipeTub =                         
+    new G4LogicalVolume(AirLongPipeTub,         //its solid
                         Air,          //its material
-                        "AirGuidePipeTub");           //its name
+                        "AirLongPipeTub");           //its name
               
   new G4PVPlacement(0,                       //no rotation relative to steel tub
-                    G4ThreeVector(0,0,0),              //at center of steel tub
-                    logicAirGuidePipeTub,             //its logical volume
-                    "AirGuidePipeTub",                //its name
-                    logicSteelGuidePipeTub,                //its mother volume (Steel tub)
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);*/
-  //========================================================================
-
-  //BeamPipe================================================================
-  G4double BeamPipeTubHalfLength = 1*m;
-  G4double BeamPipeTubOutRaius = 5*cm;
-  G4double BeamPipeTubInnerRaius = 4.5*cm;
-  G4ThreeVector pos3 = G4ThreeVector(0,0,BeamPipeTubHalfLength + 0.6*ScintillatorSize);
-  G4Tubs *BeamPipeTub =
-    new G4Tubs("BeamPipeTub", 0. * cm, BeamPipeTubOutRaius,
-               BeamPipeTubHalfLength, 0. * deg, 360. * deg);
-  G4Tubs *AirBeamPipeTub =
-    new G4Tubs("AirBeamPipeTub", 0. * cm, BeamPipeTubInnerRaius,
-               BeamPipeTubHalfLength, 0. * deg, 360. * deg);
-  G4Tubs *DetectorTub =
-    new G4Tubs("DetectorTub", 0. * cm, BeamPipeTubInnerRaius,
-               5*cm, 0. * deg, 360. * deg);
-  G4VSolid *SteelBeamPipeTub =
-    new G4SubtractionSolid("SteelBeamPipeTub", BeamPipeTub, AirBeamPipeTub,
-                           0, G4ThreeVector());
-  G4LogicalVolume* logicSteelBeamPipeTub =                         
-    new G4LogicalVolume(SteelBeamPipeTub,         //its solid
-                        SS304LSteel,          //its material
-                        "SteelBeamPipeTub");           //its name
-  //G4RotationMatrix *BeamPipeRot = new G4RotationMatrix;
-  //BeamPipeRot->rotateX(90.*deg);
-  new G4PVPlacement(0,            
-                    pos3,                    //at 0 position
-                    logicSteelBeamPipeTub,             //its logical volume
-                    "SteelBeamPipeTub",                //its name
-                    logicEnv,                //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);
-  G4LogicalVolume* logicDetectorTub =                         
-    new G4LogicalVolume(DetectorTub,         //its solid
-                        Water,          //its material
-                        "DetectorTub");           //its name
-  //========================================================================
-  //Whole air space=========================================================
-  auto AirTee =
-    new G4UnionSolid("AirTee", Container, AirBeamPipeTub, 
-                     0,pos3);
-  AirTee =
-    new G4UnionSolid("AirTee", AirTee, AirGuidePipeTub, 
-                     GuidePipeRot,pos2);
-  G4LogicalVolume* logicAirTee =                         
-    new G4LogicalVolume(AirTee,         //its solid
-                        Air,          //its material
-                        "AirTee");           //its name
-  new G4PVPlacement(0,                       //no rotation
-                    pos1,                    //at position
-                    logicAirTee,             //its logical volume
-                    "AirTee",                //its name
-                    logicEnv,                //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);          //overlaps checking
-  G4VisAttributes* DetectorVisAtt= new G4VisAttributes(G4Colour(1.0,1.0,.0,0.3));  //set translucent
-  logicAirTee->SetVisAttributes(DetectorVisAtt);
-
-  new G4PVPlacement(0,            
-                    G4ThreeVector(0,0,BeamPipeTubHalfLength),        //at center of BeamPipe
-                    logicDetectorTub,             //its logical volume
-                    "DetectorTub",                //its name
-                    logicAirTee,      //its mother  volume
+                    pos2,              //at center of steel tub
+                    logicAirLongPipeTub,             //its logical volume
+                    "AirLongPipeTub",                //its name
+                    logicEnv,                //its mother volume (Steel tub)
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);
   //========================================================================
-  //scintillator===============================================================     
-  G4Tubs* Scintillator =    
-    new G4Tubs("Scintillator",                       //its name
-       0 * cm, 0.5*ScintillatorSize, 0.5*ScintillatorSize,0. * deg, 360. * deg);     //its size
-                      
-  G4LogicalVolume* logicScintillator =                         
-    new G4LogicalVolume(Scintillator,         //its solid
+  //Reflector===============================================================  
+  G4double ReflectorLength = 19*cm;   
+  G4Tubs* Reflector =    
+    new G4Tubs("Reflector",                       //its name
+       0 * cm, LongPipeTubInnerRaius, 0.5*ReflectorLength,0. * deg, 360. * deg);     //its size
+  G4Tubs* ReflectorContainer =    
+    new G4Tubs("ReflectorContainer",                       //its name
+       0 * cm, LongPipeTubOutRaius, 0.5*ReflectorLength+0.5*cm,0. * deg, 360. * deg);                    
+  G4LogicalVolume* logicReflector =                         
+    new G4LogicalVolume(Reflector,         //its solid
                         HeavyWater,          //its material
-                        "Scintillator");           //its name
-               
+                        "Reflector");           //its name
+  G4LogicalVolume* logicReflectorContainer =                         
+    new G4LogicalVolume(ReflectorContainer,         //its solid
+                        SS304LSteel,          //its material
+                        "ReflectorContainer");  
   new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(0,0,-5*cm),       //at position
-                    logicScintillator,             //its logical volume
+                    G4ThreeVector(0,0,225*cm-0.5*ReflectorLength-0.5*cm),       //at position
+                    logicReflectorContainer,             //its logical volume
+                    "ReflectorContainer",                //its name
+                    logicEnv,                //its mother volume  is contanier
+                    false,                   //no boolean operation
+                    0,                       //copy number
+                    checkOverlaps);            
+  new G4PVPlacement(0,                       //no rotation
+                    G4ThreeVector(0,0,0*cm),       //at position
+                    logicReflector,             //its logical volume
                     "Scintillator",                //its name
-                    logicAirTee,                //its mother volume  is contanier
+                    logicReflectorContainer,                //its mother volume  is contanier
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);          //overlaps checking
@@ -325,9 +270,26 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4VisAttributes *ScintillatorVisAtt =
     new G4VisAttributes(GetterMainCylinderColor);
   ScintillatorVisAtt->SetForceAuxEdgeVisible(true);
-  logicScintillator->SetVisAttributes(
+  logicReflectorContainer->SetVisAttributes(
     ScintillatorVisAtt);
   //===============================================================
+  //Reflector===============================================================  
+  G4double DetectorLength = 3*cm;   
+  G4Tubs* Detector =    
+    new G4Tubs("Detector",                       //its name
+       0 * cm, LongPipeTubInnerRaius, 0.5*DetectorLength,0. * deg, 360. * deg);
+  G4LogicalVolume* logicDetector =                         
+    new G4LogicalVolume(Detector,         //its solid
+                        Air,          //its material
+                        "Detector");           //its name
+  new G4PVPlacement(0,                       //no rotation
+                    G4ThreeVector(0,0,-223.5*cm),   //at position
+                    logicDetector,             //its logical volume
+                    "Detector",                //its name
+                    logicEnv,                //its mother volume  is contanier
+                    false,                   //no boolean operation
+                    0,                       //copy number
+                    checkOverlaps);          //overlaps checking
   return physWorld;
 }
 

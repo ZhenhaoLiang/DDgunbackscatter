@@ -7,7 +7,7 @@
 /gps/particle neutron
 
 /gps/pos/type Point
-/gps/pos/centre 0 52.5 40 cm
+/gps/pos/centre 0 7.5 195 cm
 
 #粒子方向
 /gps/ang/type iso 
