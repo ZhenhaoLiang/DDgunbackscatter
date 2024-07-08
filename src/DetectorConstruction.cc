@@ -273,7 +273,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   logicReflectorContainer->SetVisAttributes(
     ScintillatorVisAtt);
   //===============================================================
-  //Reflector===============================================================  
+  //Detector===============================================================  
   G4double DetectorLength = 3*cm;   
   G4Tubs* Detector =    
     new G4Tubs("Detector",                       //its name

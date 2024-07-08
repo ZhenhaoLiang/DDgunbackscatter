@@ -25,7 +25,7 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-    if (step->GetTrack()->GetVolume()->GetName() == "DetectorTub") //Only neutron pass Detector would be recorded.
+    if (step->GetTrack()->GetVolume()->GetName() == "Detector") //Only neutron pass Detector would be recorded.
     {
         auto analysisManager = G4AnalysisManager::Instance();
         G4float px = step->GetPreStepPoint()->GetPosition().x();
