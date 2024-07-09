@@ -111,7 +111,7 @@ void DetectorConstruction::DefineMaterial()
   HeavyWater->AddElement(D, 2);
   HeavyWater->AddElement(O, 1);
   //===== Fefliter ======
-  Fefliter = new G4Material("Fe", 7.86 * g / cm3, 5, kStateSolid);
+  Fefliter = new G4Material("Fefliter", 7.86 * g / cm3, 1, kStateSolid);
   Fefliter->AddElement(Fe, 1.0);
   //===== C6D8 =====
   C6D8 = new G4Material("Hexane", 0.767*g/cm3, 2,
@@ -219,7 +219,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4LogicalVolume(SteelLongPipeTub,         //its solid
                         SS304LSteel,          //its material
                         "SteelLongPipeTub");           //its name
-  G4RotationMatrix *LongPipeRot = new G4RotationMatrix;
+  //G4RotationMatrix *LongPipeRot = new G4RotationMatrix;
   //GuidePipeRot->rotateX(45.*deg);
   new G4PVPlacement(0,            //rotate 0
                     pos2,                    //at position
