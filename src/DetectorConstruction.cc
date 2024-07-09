@@ -99,8 +99,7 @@ void DetectorConstruction::DefineMaterial()
   G4cout << "EJ315 : density " <<  EJ315->GetDensity()/(g / cm3) << " , "
          << "NbOfAtomsPerVolume " << EJ315->GetTotNbOfAtomsPerVolume()/(1. / cm3) << G4endl;
   //==== Stainless Steel ====
-  SS304LSteel =
-    new G4Material("SS304LSteel", 8.00 * g / cm3, 5, kStateSolid);
+  SS304LSteel = new G4Material("SS304LSteel", 8.00 * g / cm3, 5, kStateSolid);
   SS304LSteel->AddElement(Fe, 0.65);
   SS304LSteel->AddElement(Cr, 0.20);
   SS304LSteel->AddElement(Ni, 0.12);
@@ -111,6 +110,9 @@ void DetectorConstruction::DefineMaterial()
                                    kStateLiquid, 293.15*kelvin, 1*atmosphere);
   HeavyWater->AddElement(D, 2);
   HeavyWater->AddElement(O, 1);
+  //===== Fefliter ======
+  Fefliter = new G4Material("Fe", 7.86 * g / cm3, 5, kStateSolid);
+  Fefliter->AddElement(Fe, 1.0);
   //===== C6D8 =====
   C6D8 = new G4Material("Hexane", 0.767*g/cm3, 2,
                                    kStateLiquid, 298.15*kelvin, 1*atmosphere);
@@ -191,8 +193,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     0,                       //copy number
                     checkOverlaps);
 
-  //LongPipe===============================================================
+  //LongPipe&Fefliter==================================================
   G4double LongPipeTubHalfLength = 0.5*4.27*m;
+  G4double FePipeTubHalfLength = 1.5*m;
   G4double LongPipeTubOutRaius = 2.6*cm;
   G4double LongPipeTubInnerRaius = 2.5*cm;
   G4ThreeVector pos2 = G4ThreeVector(0,0,-8.5*cm);
@@ -205,6 +208,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4VSolid *SteelLongPipeTub =
     new G4SubtractionSolid("SteelBPipePlate", LongPipeTub, AirLongPipeTub,
                            0, G4ThreeVector());
+  G4Tubs *FefliterTub =
+    new G4Tubs("FefliterTub", 0. * cm, LongPipeTubInnerRaius,
+               FePipeTubHalfLength, 0. * deg, 360. * deg);                  
+  G4LogicalVolume* logicFefliterTub =                         
+    new G4LogicalVolume(FefliterTub,         //its solid
+                        Fefliter,          //its material
+                        "FefliterTub");
   G4LogicalVolume* logicSteelLongPipeTub =                         
     new G4LogicalVolume(SteelLongPipeTub,         //its solid
                         SS304LSteel,          //its material
@@ -229,6 +239,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     logicAirLongPipeTub,             //its logical volume
                     "AirLongPipeTub",                //its name
                     logicEnv,                //its mother volume (Steel tub)
+                    false,                   //no boolean operation
+                    0,                       //copy number
+                    checkOverlaps);
+  new G4PVPlacement(0,            
+                    G4ThreeVector(0,0,-65*cm),        //Behind DetectorTub
+                    logicFefliterTub,             //its logical volume
+                    "FefliterTub",                //its name
+                    logicAirLongPipeTub,      //its mother  volume
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MC_HOME='.'
-for i in $(seq 1 100)
+for i in $(seq 1 50)
   do
     export Filename='out/'$i
     export Logfile='out/log'$i'.txt'
