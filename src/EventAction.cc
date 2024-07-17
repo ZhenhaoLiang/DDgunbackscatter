@@ -21,7 +21,7 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event* pEvent)
 {    
-  if (pEvent->GetEventID() % 1000 == 0) {
+  if (pEvent->GetEventID() % 100000 == 0) {
     G4cout << "------ Begin event " << pEvent->GetEventID() << " ------"
            << G4endl;
   }

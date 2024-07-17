@@ -18,11 +18,8 @@
 /gps/hist/type arb
 #能量/数量输入
 #              	 E(MeV) Rel.yield
-/gps/hist/point    2.9 0.000000
-/gps/hist/point    2.8 0.239834
-/gps/hist/point    2.7 0.256848
-/gps/hist/point    2.6 0.257880
-/gps/hist/point    2.5 0.245438
+/gps/hist/point    2.6 0.000000
+/gps/hist/point    2.5 1.000000
 /gps/hist/point    2.4 0.000000
 
 /gps/hist/inter Spline

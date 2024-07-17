@@ -81,11 +81,11 @@ void DetectorConstruction::DefineMaterial()
   //==== EJ-315 for Scintillator target in BeamPipe ====
   // https://eljentechnology.com/products/liquid-scintillators/ej-315
 
-  G4Material *C6H6 = new G4Material("C6H6", 0.877 * g / cm3, 2, kStateLiquid);
+  C6H6 = new G4Material("C6H6", 0.877 * g / cm3, 2, kStateLiquid);
   C6H6->AddElement(C, 6);
   C6H6->AddElement(H, 6);
 
-  G4Material *C6D6 = new G4Material("C6D6", 0.950 * g / cm3, 2, kStateLiquid);
+  C6D6 = new G4Material("C6D6", 0.950 * g / cm3, 2, kStateLiquid);
   C6D6->AddElement(C, 6);
   C6D6->AddElement(D, 6);
 
@@ -174,18 +174,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     checkOverlaps);          //overlaps checking  
   // Water tank=====================================================================
   //
-  G4ThreeVector pos1 = G4ThreeVector(0, 0, -35*cm);
-  G4double WaterTankLength = 400*cm;
+  G4ThreeVector pos1 = G4ThreeVector(0, 0, -35*cm);  // Watertank
+  G4ThreeVector pos2 = G4ThreeVector(0,0,-33.5*cm);  // AirTub
+  G4double WaterTankLength = 380*cm;
+  G4double LongPipeTubOutRaius = 2.6*cm;
+  G4double LongPipeTubHalfLength = 0.5*3.77*m;
 
   G4Box* Container =    
     new G4Box("WaterContainer",                       //its name
-       0.5*env_sizeXY - 1*cm, 0.5*env_sizeXY - 1*cm, 0.5*WaterTankLength);     //its size
+       0.5*env_sizeXY - 1*cm, 0.5*env_sizeXY - 1*cm, 0.5*WaterTankLength);
+  G4Tubs *LongTub =
+    new G4Tubs("LongCutTub", 0, LongPipeTubOutRaius,
+               LongPipeTubHalfLength, 0. * deg, 360. * deg);
+  G4VSolid *ContainerCut =
+    new G4SubtractionSolid("WaterContainer", Container, LongTub,
+                           0, pos2-pos1);
   G4LogicalVolume* logicWaterTank =                         
-    new G4LogicalVolume(Container,         //its solid
+    new G4LogicalVolume(ContainerCut,         //its solid
                         Water,          //its material
                         "logicWaterTank"); 
   new G4PVPlacement(0,            //rotate 45 degree on X
-                    G4ThreeVector(0,0,-45*cm),                    //at position
+                    pos1,                    //at position
                     logicWaterTank,             //its logical volume
                     "WaterTank",                //its name
                     logicEnv,                //its mother  volume
@@ -194,20 +203,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     checkOverlaps);
 
   //LongPipe&Fefliter==================================================
-  G4double LongPipeTubHalfLength = 0.5*4.27*m;
-  G4double FePipeTubHalfLength = 1.5*m;
-  G4double LongPipeTubOutRaius = 2.6*cm;
+  
+  G4double FePipeTubHalfLength = 1*cm;
+  
   G4double LongPipeTubInnerRaius = 2.5*cm;
-  G4ThreeVector pos2 = G4ThreeVector(0,0,-8.5*cm);
+  
   G4Tubs *LongPipeTub =
-    new G4Tubs("LongPipeTub", 0. * cm, LongPipeTubOutRaius,
+    new G4Tubs("LongPipeTub", LongPipeTubInnerRaius, LongPipeTubOutRaius,
                LongPipeTubHalfLength, 0. * deg, 360. * deg);
   G4Tubs *AirLongPipeTub =
     new G4Tubs("AirLongPipeTub", 0. * cm, LongPipeTubInnerRaius,
                LongPipeTubHalfLength, 0. * deg, 360. * deg);
-  G4VSolid *SteelLongPipeTub =
-    new G4SubtractionSolid("SteelBPipePlate", LongPipeTub, AirLongPipeTub,
-                           0, G4ThreeVector());
+  G4Tubs *SteelLongPipeTub =
+    new G4Tubs("SteelLongPipeTub", LongPipeTubInnerRaius, LongPipeTubOutRaius,
+               LongPipeTubHalfLength, 0. * deg, 360. * deg);
+  //G4VSolid *SteelLongPipeTub =
+    //new G4SubtractionSolid("SteelBPipePlate", LongPipeTub, AirLongPipeTub,
+      //                     0, G4ThreeVector());
   G4Tubs *FefliterTub =
     new G4Tubs("FefliterTub", 0. * cm, LongPipeTubInnerRaius,
                FePipeTubHalfLength, 0. * deg, 360. * deg);                  
@@ -243,7 +255,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     0,                       //copy number
                     checkOverlaps);
   new G4PVPlacement(0,            
-                    G4ThreeVector(0,0,-65*cm),        //Behind DetectorTub
+                    G4ThreeVector(0,0,0*cm),        //Behind DetectorTub
                     logicFefliterTub,             //its logical volume
                     "FefliterTub",                //its name
                     logicAirLongPipeTub,      //its mother  volume
@@ -301,10 +313,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         Air,          //its material
                         "Detector");           //its name
   new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(0,0,-223.5*cm),   //at position
+                    G4ThreeVector(0,0,-0.5*(WaterTankLength - DetectorLength)),   //at position
                     logicDetector,             //its logical volume
                     "Detector",                //its name
-                    logicEnv,                //its mother volume  is contanier
+                    logicWaterTank,                //its mother volume  is contanier
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);          //overlaps checking
