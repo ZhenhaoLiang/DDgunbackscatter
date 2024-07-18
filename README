@@ -1,2 +1,14 @@
-It's an example to simualte neutron from dd gun and scatter in EJ276. A specific angle 135 is used th select lower energy neutron.
+It's an example to simualte neutron from dd gun and scatter in heavy water and pass a Fe fliter to choose mono energy neutron.
+Geant4 version is 10.6.2 and root version is 6.28, python version is 3.9.
+You can run:
+mkdir build
+cd build
+cmake../
+make
+cd ..
+mkdir out
+chmod +x run_scrip.sh
+./run_scrip.sh
+
+You can merge all root files into one csv file by python merge.py if you want.
 In this program, you can just run ./toyMC for the visiaul window, or you can run ./toyMC outfile_name logfile_name, like run_scrip.sh.
