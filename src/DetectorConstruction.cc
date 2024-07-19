@@ -1,3 +1,4 @@
+
 /// \file DetectorConstruction.cc
 /// \brief Implementation of the DetectorConstruction class
 
@@ -113,11 +114,16 @@ void DetectorConstruction::DefineMaterial()
   //===== Fefliter ======
   Fefliter = new G4Material("Fefliter", 7.86 * g / cm3, 1, kStateSolid);
   Fefliter->AddElement(Fe, 1.0);
-  //===== C6D8 =====
-  C6D8 = new G4Material("Hexane", 0.767*g/cm3, 2,
+  //===== C5D12 =====
+  C5D12 = new G4Material("Pentane", 0.731*g/cm3, 2,
                                    kStateLiquid, 298.15*kelvin, 1*atmosphere);
-  C6D8->AddElement(D, 2);
-  C6D8->AddElement(O, 1);
+  C5D12->AddElement(D, 12);
+  C5D12->AddElement(C, 5);
+  //===== CD4 =====
+  CD4 = new G4Material("Methane", 0.525*g/cm3, 2,
+                                   kStateLiquid, 190*kelvin, 50*atmosphere);
+  CD4->AddElement(D, 4);
+  CD4->AddElement(C, 1);
   //==========================================================================================
 }
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -204,7 +210,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //LongPipe&Fefliter==================================================
   
-  G4double FePipeTubHalfLength = 1*cm;
+  G4double FePipeTubHalfLength = 5*cm;
   
   G4double LongPipeTubInnerRaius = 2.5*cm;
   
@@ -254,6 +260,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);
+  /*
   new G4PVPlacement(0,            
                     G4ThreeVector(0,0,0*cm),        //Behind DetectorTub
                     logicFefliterTub,             //its logical volume
@@ -261,7 +268,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                     logicAirLongPipeTub,      //its mother  volume
                     false,                   //no boolean operation
                     0,                       //copy number
-                    checkOverlaps);
+                    checkOverlaps);*/
   //========================================================================
   //Reflector===============================================================  
   G4double ReflectorLength = 19*cm;   
@@ -273,7 +280,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
        0 * cm, LongPipeTubOutRaius, 0.5*ReflectorLength+0.5*cm,0. * deg, 360. * deg);                    
   G4LogicalVolume* logicReflector =                         
     new G4LogicalVolume(Reflector,         //its solid
-                        HeavyWater,          //its material
+                        CD4,          //its material
                         "Reflector");           //its name
   G4LogicalVolume* logicReflectorContainer =                         
     new G4LogicalVolume(ReflectorContainer,         //its solid
